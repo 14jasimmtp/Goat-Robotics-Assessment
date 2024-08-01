@@ -21,8 +21,8 @@ This is a Time Tracking API built using Golang with a clean architecture approac
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/time-tracking-api.git
-    cd time-tracking-api
+    git clone https://github.com/14jasimmtp/Goat-Robotics-Assessment.git
+    cd Goat-Robotics-Assessment
     ```
 
 2. Build and run the Docker containers:
@@ -30,8 +30,6 @@ This is a Time Tracking API built using Golang with a clean architecture approac
     docker-compose up --build
     ```
 
-3. The API will be available at `http://localhost:8080` and the PostgreSQL database at `localhost:5432`.
+3. The API will be available at `http://localhost:3000` and the PostgreSQL database at `localhost:5432`.
 
-## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
