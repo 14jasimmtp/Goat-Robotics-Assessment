@@ -31,7 +31,7 @@ func GenerateAccessToken(user *db.Users) (string, error) {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	TokenString, err := token.SignedString([]byte(viper.GetString("SecretKey")))
+	TokenString, err := token.SignedString([]byte(viper.GetString("ATokenSecret")))
 	if err != nil {
 		return "", err
 	}

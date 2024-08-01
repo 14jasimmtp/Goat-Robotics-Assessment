@@ -30,6 +30,13 @@ func (u *ProjectRepo) CreateProject(project models.Project, userID int) error {
 	return nil
 }
 
+func (pr *ProjectRepo) ListProjects(userID int) ([]models.Project, error) {
+	var projects []models.Project
+	err := pr.Db.Where("created_by = ?", userID).Find(&projects).Error
+	return projects, err
+}
+
+
 func (u *ProjectRepo) UpdateProject(project models.Project) error {
 	tx := u.Db.Model(&project).Updates(models.Project{Name: project.Name, Description: project.Description, Client: project.Client})
 	if tx.Error != nil {
@@ -38,9 +45,9 @@ func (u *ProjectRepo) UpdateProject(project models.Project) error {
 	return nil
 }
 
-func (u *ProjectRepo) CheckProjectExistByID(id uint) (bool, error) {
+func (u *ProjectRepo) CheckProjectExistByID(id uint, userID uint) (bool, error) {
 	var count int64
-	err := u.Db.Model(&models.Project{}).Where("id = ?", id).Count(&count).Error
+	err := u.Db.Model(&db.Project{}).Where("id = ? AND created_by = ?", id, userID).Count(&count).Error
 	if err != nil {
 		return false, err
 	}
@@ -64,28 +71,37 @@ func (u *ProjectRepo) AddTask(task models.Task) error {
 	return nil
 }
 
-func (u *ProjectRepo) DeleteTask(taskID uint) error {
-	tx := u.Db.Delete(&models.Task{}, taskID)
+func (u *ProjectRepo) DeleteTask(taskID string, userid int) error {
+	tx := u.Db.Delete(&db.Task{}, taskID)
 	if tx.Error != nil {
 		return tx.Error
 	}
 	return nil
 }
 
-func (u *ProjectRepo) CheckTaskExistByID(taskID uint, userID int)(bool,error) {
-
+func (u *ProjectRepo) CheckTaskExistByID(taskID string, userID int)(bool,error) {
+	var task models.Task
+	
+    if err := u.Db.Where(&db.Task{Model: gorm.Model{ID: 1}}).First(&task).Error; err != nil {
+        if err == gorm.ErrRecordNotFound {
+            return false, nil
+        }
+        return false, err
+    }
+    return true, nil
 }
 
 func (r *ProjectRepo) CreateTimeEntry(timeEntry *models.TimeEntry) error {
     return r.Db.Create(timeEntry).Error
 }
 
-func (r *ProjectRepo) UpdateTimeEntry(timeEntry *models.TimeEntry) error {
+func (r *ProjectRepo) UpdateTimeEntry(timeEntry *models.TimeEntry, UserID int) error {
+	timeEntry.UserID = uint(UserID)
     return r.Db.Save(timeEntry).Error
 }
 
-func (r *ProjectRepo) DeleteTimeEntry(id uint) error {
-    return r.Db.Delete(&models.TimeEntry{}, id).Error
+func (r *ProjectRepo) DeleteTimeEntry(id string, userID int) error {
+    return r.Db.Delete(&models.TimeEntry{UserID: uint(userID)}, id).Error
 }
 
 func (r *ProjectRepo) GetByIDTimeEntry(id uint) (*models.TimeEntry, error) {

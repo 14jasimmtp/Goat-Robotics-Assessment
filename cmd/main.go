@@ -1,6 +1,9 @@
 package main
 
 import (
+	"log"
+
+	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/config"
 	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/db"
 	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/handler"
 	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/repository"
@@ -10,6 +13,9 @@ import (
 )
 
 func main() {
+	if config.LoadConfig() != nil {
+		log.Fatal("error loading config files")
+	}
 	DB := db.ConnectToDB()
 	AuthRepo := repository.NewAuthRepo(DB)
 	AuthUsecase := usecase.NewAuthUsecase(AuthRepo)

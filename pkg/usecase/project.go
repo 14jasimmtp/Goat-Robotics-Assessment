@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"strconv"
 	"time"
 
 	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/models"
@@ -28,19 +29,23 @@ func (u *ProjectUsecase) CreateProject(project models.Project, userID int) error
 	return nil
 }
 
-func (u *ProjectUsecase) AddTask(task models.Task) error {
-	exist, err := u.Repo.CheckProjectExistByID(task.ProjectID)
+func (u *ProjectUsecase) ListProjects(userID int) ([]models.Project, error) {
+	return u.Repo.ListProjects(userID)
+}
+
+func (u *ProjectUsecase) AddTask(task models.Task, UserID int) error {
+	exist, err := u.Repo.CheckProjectExistByID(task.ProjectID, uint(UserID))
 	if err != nil {
-		return errors.New(`something went wrong`)
+		return errors.New(`something went wrong 1`)
 	}
 
-	if exist {
-		return errors.New(`task already exist in this project`)
+	if !exist {
+		return errors.New(`project doesn't exist with this id`)
 	}
 
 	exist, err = u.Repo.CheckTaskExistInProject(task.ProjectID, task.Name)
 	if err != nil {
-		return errors.New(`something went wrong`)
+		return errors.New(`something went wrong 2`)
 	}
 	if exist {
 		return errors.New(`task already added in this project`)
@@ -53,7 +58,7 @@ func (u *ProjectUsecase) AddTask(task models.Task) error {
 	return nil
 }
 
-func (u *ProjectUsecase) DeleteTask(taskID uint, userID int) error {
+func (u *ProjectUsecase) DeleteTask(taskID string, userID int) error {
 	exist, err := u.Repo.CheckTaskExistByID(taskID, userID)
 	if err != nil {
 		return errors.New("something went wrong")
@@ -75,25 +80,21 @@ func (u *ProjectUsecase) CreateTimeEntry(timeEntry *models.TimeEntry) error {
 	return u.Repo.CreateTimeEntry(timeEntry)
 }
 
-func (u *ProjectUsecase) UpdateTimeEntry(timeEntry *models.TimeEntry) error {
+func (u *ProjectUsecase) UpdateTimeEntry(timeEntry *models.TimeEntry, userID int) error {
 	timeEntry.EndTime = time.Now()
-	return u.Repo.UpdateTimeEntry(timeEntry)
+	return u.Repo.UpdateTimeEntry(timeEntry, userID)
 }
 
-func (u *ProjectUsecase) DeleteTimeEntry(id uint) error {
-	return u.Repo.DeleteTimeEntry(id)
+func (u *ProjectUsecase) DeleteTimeEntry(id string, userID int) error {
+	return u.Repo.DeleteTimeEntry(id, userID)
 }
 
 func (u *ProjectUsecase) GetTimeEntryByID(id uint) (*models.TimeEntry, error) {
 	return u.Repo.GetByIDTimeEntry(id)
 }
 
-func (u *ProjectUsecase) GetAllTimeEntries() ([]models.TimeEntry, error) {
-	return u.Repo.GetAllTimeEntry()
-}
-
-func (u *ProjectUsecase) AddTimeEntry(timeEntry models.TimeEntry, userID int) error {
-	exist, err := u.Repo.CheckTaskExistByID(timeEntry.TaskID, userID)
+func (u *ProjectUsecase) AddTimeEntry(timeEntry *models.TimeEntry, userID int) error {
+	exist, err := u.Repo.CheckTaskExistByID(strconv.Itoa(int(timeEntry.TaskID)), userID)
 	if err != nil {
 		return errors.New("something went wrong")
 	}
@@ -101,8 +102,8 @@ func (u *ProjectUsecase) AddTimeEntry(timeEntry models.TimeEntry, userID int) er
 	if !exist {
 		return errors.New("task does not exist")
 	}
-
-	err = u.Repo.AddTimeEntry(timeEntry)
+	timeEntry.StartTime = time.Now()
+	err = u.Repo.CreateTimeEntry(timeEntry)
 	if err != nil {
 		return err
 	}

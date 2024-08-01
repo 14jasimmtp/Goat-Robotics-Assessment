@@ -34,14 +34,12 @@ type Task struct {
 }
 
 type TimeEntry struct {
-	gorm.Model
-	TaskID    uint      `gorm:"not null"`
-	Task      Task      `gorm:"foreignkey:TaskID"`
-	UserID    uint      `gorm:"not null"`
-	Users     Users     `json:"foreignkey:UserID"`
-	StartTime time.Time `gorm:"not null"`
+	ID        uint `gorm:"primaryKey"`
+	TaskID    uint
+	UserID    uint  `gorm:"not null"`
+	User      Users `gorm:"foreignkey:UserID"`
+	StartTime time.Time
 	EndTime   time.Time
-	Duration  time.Duration
 }
 
 func ConnectToDB() *gorm.DB {
@@ -75,6 +73,6 @@ func ConnectToDB() *gorm.DB {
 	db.AutoMigrate(&Users{})
 	db.AutoMigrate(&Project{})
 	db.AutoMigrate(&Task{})
-	db.AutoMigrate(&TimeEntry{})
+	 db.AutoMigrate(&TimeEntry{})
 	return db
 }

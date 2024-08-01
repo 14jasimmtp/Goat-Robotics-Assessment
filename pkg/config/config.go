@@ -4,6 +4,7 @@ import "github.com/spf13/viper"
 
 type Config struct {
 	DB_URL    string `mapstructure:"DB_URL"`
+	ATokenSecret string `mapstructure:"ATokenSecret"`
 }
 
 func LoadConfig() (err error) {

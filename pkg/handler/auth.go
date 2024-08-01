@@ -4,15 +4,15 @@ import (
 	"net/http"
 
 	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/models"
-	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/usecase"
+	interfaceUsecase "github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/usecase/inteface"
 	"github.com/gin-gonic/gin"
 )
 
 type AuthHandler struct {
-	us usecase.AuthUsecase
+	us interfaceUsecase.AuthUsecase
 }
 
-func NewAuthHandler(us usecase.AuthUsecase) AuthHandler {
+func NewAuthHandler(us interfaceUsecase.AuthUsecase) AuthHandler {
 	return AuthHandler{us: us}
 }
 
