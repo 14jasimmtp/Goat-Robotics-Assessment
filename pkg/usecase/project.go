@@ -7,14 +7,15 @@ import (
 
 	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/models"
 	interfaceRepo "github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/repository/interface"
+	interfaceUsecase "github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/usecase/inteface"
 )
 
 type ProjectUsecase struct {
 	Repo interfaceRepo.ProjectRepository
 }
 
-func NewProjectUsecase(repo interfaceRepo.ProjectRepository) ProjectUsecase {
-	return ProjectUsecase{Repo: repo}
+func NewProjectUsecase(repo interfaceRepo.ProjectRepository) interfaceUsecase.ProjectUsecase {
+	return &ProjectUsecase{Repo: repo}
 }
 
 func (u *ProjectUsecase) CreateProject(project models.Project, userID int) error {

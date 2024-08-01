@@ -9,11 +9,11 @@ import (
 )
 
 type AuthHandler struct {
-	us interfaceUsecase.AuthUsecase
+	Usecase interfaceUsecase.AuthUsecase
 }
 
 func NewAuthHandler(us interfaceUsecase.AuthUsecase) AuthHandler {
-	return AuthHandler{us: us}
+	return AuthHandler{Usecase: us}
 }
 
 func (h *AuthHandler) Register(c *gin.Context) {
@@ -24,7 +24,7 @@ func (h *AuthHandler) Register(c *gin.Context) {
 		return
 	}
 
-	user, err := h.us.Register(body)
+	user, err := h.Usecase.Register(body)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -42,7 +42,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	user, err := h.us.Login(body)
+	user, err := h.Usecase.Login(body)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return

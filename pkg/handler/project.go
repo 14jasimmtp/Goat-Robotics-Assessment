@@ -6,15 +6,15 @@ import (
 	"strconv"
 
 	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/models"
-	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/usecase"
+	interfaceUsecase "github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/usecase/inteface"
 	"github.com/gin-gonic/gin"
 )
 
 type ProjectHandler struct {
-	us usecase.ProjectUsecase
+	us interfaceUsecase.ProjectUsecase
 }
 
-func NewProjectHandler(us usecase.ProjectUsecase) *ProjectHandler {
+func NewProjectHandler(us interfaceUsecase.ProjectUsecase) *ProjectHandler {
 	return &ProjectHandler{us: us}
 }
 

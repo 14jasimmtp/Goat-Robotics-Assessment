@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -43,7 +44,7 @@ type TimeEntry struct {
 }
 
 func ConnectToDB() *gorm.DB {
-	db, err := gorm.Open(postgres.Open("postgres://postgres:jasi123@localhost:5432"), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(viper.GetString("DB_URL")), &gorm.Config{})
 
 	if err != nil {
 		log.Fatal(err)
@@ -65,7 +66,7 @@ func ConnectToDB() *gorm.DB {
 		log.Println("created database " + dbName)
 	}
 
-	db, err = gorm.Open(postgres.Open("postgres://postgres:jasi123@localhost:5432"+"/"+dbName), &gorm.Config{})
+	db, err = gorm.Open(postgres.Open(viper.GetString("DB_URL")+"/"+dbName), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
