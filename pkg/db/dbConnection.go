@@ -5,7 +5,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -39,13 +38,13 @@ type TimeEntry struct {
 	TaskID    uint      `gorm:"not null"`
 	Task      Task      `gorm:"foreignkey:TaskID"`
 	UserID    uint      `gorm:"not null"`
+	Users     Users     `json:"foreignkey:UserID"`
 	StartTime time.Time `gorm:"not null"`
 	EndTime   time.Time
 	Duration  time.Duration
 }
 
 func ConnectToDB() *gorm.DB {
-	fmt.Println(viper.GetString("DB_URL"),"jelllo")
 	db, err := gorm.Open(postgres.Open("postgres://postgres:jasi123@localhost:5432"), &gorm.Config{})
 
 	if err != nil {

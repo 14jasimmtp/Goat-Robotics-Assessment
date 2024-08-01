@@ -5,6 +5,7 @@ import (
 
 	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/db"
 	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/models"
+	interfaceRepo "github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/repository/interface"
 	"gorm.io/gorm"
 )
 
@@ -12,8 +13,8 @@ type AuthRepo struct{
 	Db *gorm.DB
 }
 
-func NewAuthRepo(db *gorm.DB) AuthRepo{
-	return AuthRepo{Db: db}
+func NewAuthRepo(db *gorm.DB) interfaceRepo.AuthInterface{
+	return &AuthRepo{Db: db}
 }
 
 func (r *AuthRepo) SaveUser(user models.Register, Password string) (*db.Users, error){

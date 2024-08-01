@@ -2,21 +2,21 @@ package usecase
 
 import (
 	"errors"
-	"fmt"
 
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/models"
-	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/repository"
+	interfaceRepo "github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/repository/interface"
+	interfaceUsecase "github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/usecase/inteface"
 	"github.com/14jasimmtp/Goat-Robotics-Assessment/pkg/utils"
 )
 
 type AuthUsecase struct {
-	Repo repository.AuthRepo
+	Repo interfaceRepo.AuthInterface
 }
 
-func NewAuthUsecase(repo repository.AuthRepo) AuthUsecase {
-	return AuthUsecase{Repo: repo}
+func NewAuthUsecase(repo interfaceRepo.AuthInterface) interfaceUsecase.AuthUsecase {
+	return &AuthUsecase{Repo: repo}
 }
 
 func (u *AuthUsecase) Register(user models.Register) (*models.RegisterRes, error) {
@@ -24,10 +24,9 @@ func (u *AuthUsecase) Register(user models.Register) (*models.RegisterRes, error
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(users)
-	// if users != nil {
-	// 	return nil, errors.New(`user already exist`)
-	// }
+	if users.Email != "" {
+		return nil, errors.New(`user already exist`)
+	}
 
 	HashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 	if err != nil {
@@ -58,5 +57,5 @@ func (u *AuthUsecase) Login(body models.Login) (*models.LoginRes, error) {
 		return nil, err
 	}
 
-	return &models.LoginRes{Status: "Success", Token: token,User: *user}, nil
+	return &models.LoginRes{Status: "Success", Token: token, User: *user}, nil
 }
